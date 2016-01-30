@@ -14,6 +14,22 @@ public class Printer {
         printUtil("Select a valid option!");
     }
 
+    public static void printCheckoutSuccessMessage() {
+        printUtil("Thank you! Enjoy the book.");
+    }
+
+    public static void printReturnSuccessMessage() {
+        printUtil("Thank you for returning the book.");
+    }
+
+    public static void printCheckoutFailedMessage() {
+        printUtil("That book is not available.");
+    }
+
+    public static void printReturnFailedMessage() {
+        printUtil("That is not a valid book to return.");
+    }
+
     public static void printMainMenu() {
         printUtil("1. List Books");
         printUtil("2. Checkout Book");
