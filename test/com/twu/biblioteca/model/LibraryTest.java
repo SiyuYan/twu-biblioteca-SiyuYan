@@ -3,60 +3,76 @@ package com.twu.biblioteca.model;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.List;
-
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 public class LibraryTest {
 
-    List bookList;
     Library library;
+    Customer customer;
 
     @Before
     public void setUp() {
         library = new Library();
-        bookList = library.getAllBookList();
+        customer = new Customer();
     }
 
     @Test
     public void should_get_all_book_list() {
-        assertNotEquals(bookList.size(), 0);
+        assertNotEquals(library.getAllBookList().size(), 0);
     }
 
     @Test
     public void should_checkout_book_success_when_bookList_has_that_book() {
-        Customer customer = new Customer();
-        assertEquals(bookList.size(), 2);
+        assertThat(library.getAllBookList().size(),is(2));
 
-        assertThat(1, is(customer.checkoutBook("a book").size()));
+        customer.checkoutBook(library, "a book");
+        assertThat(library.getAllBookList().size(),is(1));
+
+        assertThat(library.getAlertMessage(),is("Thank you! Enjoy the book"));
     }
 
     @Test
     public void should_not_checkout_book_success_when_bookList_do_not_has_that_book() {
-        Customer customer = new Customer();
-        assertEquals(library.getAllBookList().size(), 2);
+        assertThat(library.getAllBookList().size(), is(2));
 
-        assertThat(2, is(customer.checkoutBook("not available").size()));
+        customer.checkoutBook(library, "not available");
+        assertThat(library.getAllBookList().size(), is(2));
+        assertThat(library.getAlertMessage(),is("That book is not available."));
     }
 
     @Test
     public void should_return_book_success() {
-        Library library = new Library();
-        Customer customer = new Customer();
-        assertEquals(library.getAllBookList().size(), 2);
+        assertThat(library.getAllBookList().size(), is(2));
 
-        assertThat(3, is(customer.returnBook("a book").size()));
+        customer.returnBook(library, "a book");
+        assertThat(library.getAllBookList().size(), is(3));
+        assertThat(library.getAlertMessage(),is("Thank you for returning the book."));
     }
 
     @Test
     public void should_not_return_book_success_when_the_book_not_belong_to_the_library() {
-        Library library = new Library();
-        Customer customer = new Customer();
-        assertEquals(library.getAllBookList().size(), 2);
+        assertThat(library.getAllBookList().size(),is(2));
 
-        assertThat(2, is(customer.returnBook("not available").size()));
+        customer.returnBook(library, "not available");
+        assertThat(library.getAllBookList().size(), is(2));
+        assertThat(library.getAlertMessage(),is("That is not a valid book to return."));
+    }
+
+    @Test
+    public void should_checkout_and_return_book_success_when_multi_operation() {
+        assertThat(library.getAllBookList().size(), is(2));
+
+        customer.checkoutBook(library, "a book");
+        assertThat(library.getAllBookList().size(), is(1));
+        customer.returnBook(library, "a book");
+        assertThat(library.getAllBookList().size(), is(2));
+
+        customer.checkoutBook(library, "a book");
+        assertThat("Thank you! Enjoy the book", is(library.getAlertMessage()));
+        assertThat(library.getAllBookList().size(), is(1));
+
+        customer.checkoutBook(library, "a book");
+        assertThat("That book is not available.", is(library.getAlertMessage()));
     }
 }
