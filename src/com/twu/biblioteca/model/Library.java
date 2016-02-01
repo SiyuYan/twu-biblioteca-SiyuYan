@@ -9,7 +9,7 @@ public class Library {
             new Book("another book", "Siyu", 1992)));
     private List<Book> libraryBookList = new ArrayList<>(Arrays.asList(new Book("a book", "Siyu", 1992),
             new Book("another book", "Siyu", 1992)));
-
+    //TODO:copy list
     private String alertMessage;
 
     public void setAlertMessage(String alertMessage) {
